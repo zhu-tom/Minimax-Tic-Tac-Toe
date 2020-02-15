@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TicTacToe</string>
+    <string name="X">X</string>
+    <string name="O">O</string>
+    <string name="reset">Reset</string>
+    <string name="xWins">X Wins</string>
+    <string name="oWins">O Wins</string>
+    <string name="zero">0</string>
+</resources>
