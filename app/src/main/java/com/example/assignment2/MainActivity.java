@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -73,8 +72,10 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (!mWaiting) {
                         if (!mGame.getGameEnded()) {
-                            mGame.userPlay(index);
-                            endGame(mGame.checkWinner());
+                            if (!mGame.userPlay(index)) {
+                                return;
+                            }
+                            checkEndGame();
                             updateBoard();
                         }
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     mGame.cpuPlay();
-                                    endGame(mGame.checkWinner());
+                                    checkEndGame();
                                     updateBoard();
                                     mWaiting = false;
                                 }
@@ -128,10 +129,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void endGame(int[] line) {
-        if (line == null) return;
+    private void checkEndGame() {
+        if (mGame.getGameEnded() == false) return;
 
-        mGame.setGameEnded(true);
+        int[] line = mGame.getWinningLine();
 
         char symbol = !mGame.getIsXTurn() ? 'X' : 'O'; // get previous turn (winner)
 

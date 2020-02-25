@@ -2,11 +2,8 @@ package com.example.assignment2;
 
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Random;
 
 public class TicTacToeGame {
     private char[] grid;
@@ -14,6 +11,7 @@ public class TicTacToeGame {
     private boolean userStarts;
     private HashMap<String, Integer> wins;
     private boolean gameEnded;
+    private int[] winningLine;
 
     private static final String TAG = "TicTacToeGame";
 
@@ -46,16 +44,20 @@ public class TicTacToeGame {
     public boolean getUserStarts() { return userStarts; }
     public boolean getGameEnded() { return gameEnded; }
 
-    public void setGameEnded(boolean gameEnded) {
-        this.gameEnded = gameEnded;
-    }
+    public int[] getWinningLine() { return winningLine; }
 
     public boolean userPlay(int square) {
-        return play(square);
+        if (play(square)) {
+            checkWinner();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void cpuPlay() {
         play(getBestMove());
+        checkWinner();
     }
 
     private int getBestMove() {
@@ -132,7 +134,7 @@ public class TicTacToeGame {
 
     private boolean play(int square) {
         if (grid[square] != '\u0000') {
-            Log.i(TAG, "Filled");
+            //Log.i(TAG, "Filled");
             return false;
         }
         grid[square] = isXTurn ? 'X':'O';
@@ -159,7 +161,11 @@ public class TicTacToeGame {
     }
 
     public int[] checkWinner() {
-        return checkWinner(grid);
+        winningLine = checkWinner(grid);
+        if (winningLine != null) {
+            gameEnded = true;
+        }
+        return winningLine;
     }
 
     public int[] checkWinner(char[] exampleGrid) {
@@ -177,7 +183,6 @@ public class TicTacToeGame {
         for (int[] line : lines) {
             int a = line[0], b = line[1], c = line[2];
             if (exampleGrid[a] != '\u0000' && exampleGrid[a] == exampleGrid[b] && exampleGrid[a] == exampleGrid[c]) {
-
                 return line; // winner
             }
         }
@@ -199,9 +204,10 @@ public class TicTacToeGame {
     public void reset() {
         isXTurn = true;
         grid = new char[9];
-        gameEnded = false;
 
-        userStarts = !userStarts;
+        if (gameEnded) userStarts = !userStarts;
+
+        gameEnded = false;
 
         if (!userStarts) {
             cpuPlay();
