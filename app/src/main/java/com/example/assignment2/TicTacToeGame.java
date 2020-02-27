@@ -84,7 +84,7 @@ public class TicTacToeGame {
 
         int[] winningLine = checkWinner(exampleGrid);
 
-        if (winningLine != null) {
+        if (winningLine != null) { //terminating move, end of branch, must score branch
             if (Arrays.equals(winningLine, new int[]{0,0,0})) {
                 return score('D', depth);
             } else {
@@ -93,17 +93,17 @@ public class TicTacToeGame {
         } else {
             for (int i = 0; i < exampleGrid.length; i++) {
                 if (exampleGrid[i] == '\u0000') {
-                    if (isMax) {
+                    if (isMax) { //maximizer (cpu)
                         exampleGrid[i] = userStarts ? 'O':'X';
 
-                        bestScore = Math.max(bestScore, minimax(exampleGrid, false, depth+1));
-                    } else {
+                        bestScore = Math.max(bestScore, minimax(exampleGrid, false, depth+1)); //compare score to next minimax
+                    } else { //minimizer (player)
                         exampleGrid[i] = userStarts ? 'X':'O';
 
                         bestScore = Math.min(bestScore, minimax(exampleGrid, true, depth+1));
                     }
 
-                    exampleGrid[i] = '\u0000';
+                    exampleGrid[i] = '\u0000'; //reset for next possible move
                 }
             }
             return bestScore;
@@ -134,17 +134,17 @@ public class TicTacToeGame {
 
     private boolean play(int square) {
         if (grid[square] != '\u0000') {
-            //Log.i(TAG, "Filled");
             return false;
         }
         grid[square] = isXTurn ? 'X':'O';
         isXTurn = !isXTurn;
-        Log.i(TAG, printBoard());
+        //Log.i(TAG, printBoard());                 ******* commented out for JUnit Tests *******
+        System.out.print(printBoard());
         return true;
     }
 
     private String printBoard() {
-        String result = "Board\n\n";
+        String result = "Board\n";
         for (int i = 0; i < grid.length; i++) {
             char item = grid[i] == '\u0000' ? ' ' : grid[i];
             if ((i+1) % 3 == 0) {
@@ -153,7 +153,7 @@ public class TicTacToeGame {
                 result += item + "|";
             }
         }
-        return result;
+        return result + '\n';
     }
 
     public void addWinner(char symbol) {

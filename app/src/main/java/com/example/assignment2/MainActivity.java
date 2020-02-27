@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkEndGame() {
-        if (mGame.getGameEnded() == false) return;
+        if (!mGame.getGameEnded()) return;
 
         int[] line = mGame.getWinningLine();
 
